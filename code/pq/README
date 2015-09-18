@@ -1,0 +1,61 @@
+What is this?
+=============
+
+A (slow) matlab implementation of the product quantizer search method.
+This library allows the search in a large vector dataset indexed by a 
+limited amount of memory. It is an implementation of the method described in 
+
+@Article{JDS11,
+  author       = "Herv\'e J\'egou and Matthijs Douze and Cordelia Schmid",
+  title        = "Product quantization for nearest neighbor search",
+  journal      = "IEEE Transactions on Pattern Analysis \& Machine Intelligence",
+  number       = "1",
+  volume       = "33",
+  pages        = "117--128",
+  month        = "jan",
+  year         = "2011",
+  url          = "http://lear.inrialpes.fr/pubs/2011/JDS11"
+}
+
+
+Legal & Contact
+===============
+
+This package was written by Herve Jegou
+Copyright (C) INRIA 2009-2011
+Last change: February 2011. 
+Contact: herve.jegou@inria.fr
+
+This software is governed by the CeCILL license under French law and
+abiding by the rules of distribution of free software. 
+See http://www.cecill.info/licences.en.html
+
+INRIA might also provide an optimized C/python implementation of this library, 
+either for research of commercial purpose. Do not hesitate to contact us. 
+
+
+Installation
+============
+
+1) Download the yael library and compile the matlab function (matlab subdirectory). 
+See https://gforge.inria.fr/projects/yael/
+
+The pqcodes package was tested with version Yael v138. 
+
+Note this library is maintained only for Linux. A windows implementation is also 
+provided in release v42, but this is not supported by the main developpers. 
+
+2) Put the subdirectory "matlab" of Matlab in the matlab path (done by the "addpath" Matlab command)
+
+3) Compile the mexfile for better efficiency:
+>> mex sumidxtab.c
+
+4) Optionnally, download the siftsmall/sift/gist evaluation datasets for tests on real data
+
+5) run the pq_test or the ivfpq_test sample programs
+
+Remark: by default, the program uses an automatically generated dataset ('random'). 
+        You can download the same datasets as the one we used in our paper [JDS11]
+        at the following address: http://corpus-texmex.irisa.fr
+        In that case, you have to adjust the "basedir" variable in the file
+        pq_test_load_Vectors.m to fit your local path 
