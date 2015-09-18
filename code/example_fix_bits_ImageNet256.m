@@ -14,13 +14,10 @@ X = X_normalized;
 method = {'LSH', 'ITQ', 'BBE-rand', 'BBE-opt', 'CBE-rand', 'CBE-opt', 'KBE-rand-orth-4', ...
     'KBE-opt-4','KBE-rand-orth-2', 'KBE-opt-2','PQ', 'KPQ', 'ck-means', 'Kck-means'};
 
-<<<<<<< HEAD
 %Please uncomment this under Windows. All the quantization methods cannot run under Windows.
 %method = {'LSH', 'ITQ', 'BBE-rand', 'BBE-opt', 'CBE-rand', 'CBE-opt', 'KBE-rand-orth-4', ...
 %    'KBE-opt-4','KBE-rand-orth-2', 'KBE-opt-2'};
 
-=======
->>>>>>> 5ef7318911168d70157c5dc7f6ab7a112ee795e0
 bits_setting = [256];
 [Xtraining, Xtest, WtrueTestTraining] = getTrainingSplit(X);
 
