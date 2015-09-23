@@ -1,5 +1,4 @@
 function [Xtraining, Xtest, WtrueTestTraining] = getTrainingSplit(X)
-    rng(0);
     num_test = 500;    % 500 query test point, rest are database
 
     % split up into training arend test set

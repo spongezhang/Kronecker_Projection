@@ -16,7 +16,7 @@ if (isfield(para, 'bit'))
     bit = para.bit;
 end
 
-train_size = min(size(Xtraining,1), 5000);
+train_size = min(size(Xtraining,1), 10000);
 d= size(Xtraining, 2);
 rand_bit = randperm(d);
 
