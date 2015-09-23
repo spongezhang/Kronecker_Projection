@@ -13,16 +13,21 @@ void mexFunction (int nlhs, mxArray *plhs[],
                   int nrhs, const mxArray*prhs[])
 
 {
+  
+  int i, j, maxjk, jk;
+  float distmp;
+  float * D;  /* tabulated distances */
+  uint8 * x;    /* vectors */
+  float *dis;
+  int offset;
+  int k,d,n;
+  maxjk = d * k;
   if (nrhs != 2 && nrhs != 3) 
     mexErrMsgTxt ("Invalid number of input arguments");
   
   if (nlhs > 1)
     mexErrMsgTxt ("This function output exactly 1 argument");
-
-  int k = mxGetM (prhs[0]);
-  int d = mxGetN (prhs[0]);
-  int n = mxGetN (prhs[1]);
-
+  
   if (mxGetM (prhs[1]) != d)
       mexErrMsgTxt("Dimension of tabulated distances are not consistent");
 
@@ -31,27 +36,28 @@ void mexFunction (int nlhs, mxArray *plhs[],
 
   if (mxGetClassID(prhs[1]) != mxUINT8_CLASS)
     mexErrMsgTxt ("second argument should uint8 type"); 
-
-  float * D = (float*) mxGetPr (prhs[0]);  /* tabulated distances */
-  uint8 * x = (uint8*) mxGetPr (prhs[1]);    /* vectors */
+  
+  k = mxGetM (prhs[0]);
+  d = mxGetN (prhs[0]);
+  n = mxGetN (prhs[1]);
+  maxjk = d * k;
+  
+  D = (float*) mxGetPr (prhs[0]);  /* tabulated distances */
+  x = (uint8*) mxGetPr (prhs[1]);    /* vectors */
 
   /* ouptut: distances */
 
   plhs[0] = mxCreateNumericMatrix (n, 1, mxSINGLE_CLASS, mxREAL);
-  float *dis = (float*) mxGetPr (plhs[0]);
+  dis = (float*) mxGetPr (plhs[0]);
 
   /* Defaut: manage matlab starting with 1: arithmetic pointer. 
      Otherwise use explicit offset parameters.              */
-  int offset = 0; 
+  offset = 0; 
   if (nrhs == 3)
     offset = (int) mxGetScalar(prhs[2]);
 
-  D = D - offset;
+  D = D - offset; 
   
-  int i, j, maxjk = d * k, jk;
-  float distmp;
-  
-
   for (i = 0 ; i < n ; i++) {
     distmp = 0;
     for (jk = 0 ; jk < maxjk ; jk += k)

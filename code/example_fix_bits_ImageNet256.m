@@ -10,7 +10,7 @@ index = 1;
 X_normalized = normalization(X, 'l2');
 X = X_normalized;
 
-%method = {'PQ', 'ck-means', 'KPQ', 'Kck-means'};
+%method = {'KPQ', 'Kck-means'};
 method = {'LSH', 'ITQ', 'BBE-rand', 'BBE-opt', 'CBE-rand', 'CBE-opt', 'KBE-rand-orth-4', ...
     'KBE-opt-4','KBE-rand-orth-2', 'KBE-opt-2','PQ', 'KPQ', 'ck-means', 'Kck-means'};
 
@@ -44,7 +44,7 @@ for k = bits_setting
     aver_res = mean(res,3);
     drawFigure(method, aver_res);
     
-    disp(sum(aver_res(14,:)-aver_res(12,:)));
+    disp(sum(aver_res(2,:)-aver_res(1,:)));
     %print(h, sprintf('figure_%f.eps', now), '-depsc')
     print(gcf,'-djpeg',sprintf('./result/%s_fix_nbits_%d.jpg',database,k));
     save(sprintf('./result/%s_fix_nbits_%d.mat',database,k),'method','aver_res');

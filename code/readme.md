@@ -9,9 +9,7 @@ Please cite our ICCV 2015 paper if you use the code in research.
   booktitle={International Conference on Computer Vision}
 }
 
-The code is tested on MacOSX 10.10 and Ubuntu 14.10 with Matlab 2014. We have contained the compiled mex file for both platforms. If it does not work, please run compile_all.m to compile all the mex c code.
-
-/*For Windows user, we are so sorry that all the quantization methods cannot run under Windows. However all the binary embedding methods should work.*/
+The code is tested on MacOSX 10.10, Ubuntu 14.10, Windows 8 with Matlab 2014. We have contained the compiled mex files for all the platforms. If the code does not work on your machine, please run compile_all.m to compile all the mex c files.
 
 example_fix_bits_ImageNet256.m is an example of how to use the code. 
 

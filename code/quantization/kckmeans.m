@@ -28,7 +28,7 @@ model.m = m;
 model.p = p;
 
 if (length(h) == 1)
-  h = ones(m, 1) * h;
+    h = ones(m, 1) * h;
 end
 nbits = sum(log2(h));
 model.h = h;
@@ -45,7 +45,14 @@ len1 = cumsum(len);
 
 DB = zeros(size(X), 'single');  % DB stores D*B
 
-R = Kronecker_rand(p,p,2,1);
+if(length(X(:,1))<20000)
+    R = Kronecker_rand(p,p,2,1);
+else
+    %For ultra-high dimensional data, we recommend to use 4*4 element
+    %matrices for stablability.
+    R = Kronecker_rand(p,p,4,1);
+end
+
 R = R.Q;
 model.init = init;
 model.initR = R;
@@ -61,46 +68,55 @@ D = cell(m, 1);
 global index;
 rng(index);
 for (i=1:m)
-  perm = randperm(n, h(i));
-  D{i} = RX(len0(i):len1(i), perm);
+    perm = randperm(n, h(i));
+    D{i} = RX(len0(i):len1(i), perm);
 end
 
 % initialize B
 B = zeros(n, m, 'int32');
 for (i=1:m)
-  B(:, i) = euc_nn_mex(D{i}, RX(len0(i):len1(i), :));
-  DB(len0(i):len1(i), :) = D{i}(:, B(:, i));
+    B(:, i) = euc_nn_mex(D{i}, RX(len0(i):len1(i), :));
+    DB(len0(i):len1(i), :) = D{i}(:, B(:, i));
 end
 DB = double(DB);
 
+if(length(X(:,1))<20000)
+    freq = 1;
+else
+    %For ultra-high dimensional data, it is better not updating R to often.
+    freq = 5;
+end
+
 for (iter=0:niter)
-  if (mod(iter, 1) == 0)
-    objlast = obj;
-    tmp = kronmult(R,DB,0);
-    tmp = tmp - X;
-    tmp = tmp.^2;
-    obj = mean(sum(tmp, 'double'));
-    clear tmp;
-    %obj = norm(tmp-X,'fro');
-    fprintf('%3d %.6f   \n', iter, obj);  
-    model.obj(iter+1) = obj;
-  %else
-    %fprintf('%3d\r', iter);
-  end
-  
-  if (objlast - obj < model.obj(1) * 1e-5)
-    fprintf('not enough improvement in the objective... breaking.\n')
-    break;
-  end
-  
-  % update R
-  %R = tp_one_step_optimized(R, X, DB);
-    R = tp_one_step_optimized(R, X, DB);
-    RX = kronmult(R,X,1);
-    if strcmp(class(RX),'double')
-        RX = single(RX);
+    if (mod(iter, 1) == 0)
+        objlast = obj;
+        tmp = kronmult(R,DB,0);
+        tmp = tmp - X;
+        tmp = tmp.^2;
+        obj = mean(sum(tmp, 'double'));
+        clear tmp;
+        %obj = norm(tmp-X,'fro');
+        fprintf('%3d %.6f   \n', iter, obj);  
+        model.obj(iter+1) = obj;
+        %else
+        %fprintf('%3d\r', iter);
     end
 
+    if (objlast - obj < model.obj(1) * 1e-5)
+        fprintf('not enough improvement in the objective... breaking.\n')
+        break;
+    end
+
+    % update R
+    %R = tp_one_step_optimized(R, X, DB);
+    if (mod(iter, freq) == 0)
+        R = tp_one_step_optimized(R, X, double(DB));
+        RX = kronmult(R,X,1);
+        if strcmp(class(RX),'double')
+            RX = single(RX);
+        end
+    end
+    
     for (i=1:m)
         % update D
         D{i} = kmeans_iter_mex(RX(len0(i):len1(i), :), B(:, i), h(i));
@@ -108,19 +124,20 @@ for (iter=0:niter)
         B(:, i) = euc_nn_mex(D{i}, RX(len0(i):len1(i), :));
         % TODO: remove [B(:, i) b] = yael_nn(D{i}, RX(len0(i):len1(i), :), 1, 2);
         % update D*B
-        if strcmp(class(DB),'double')
-            DB = single(DB);
-        end
+        %if strcmp(class(DB),'double')
+         %   DB = single(DB);
+        %end
         DB(len0(i):len1(i), :) = D{i}(:, B(:, i));
-        if strcmp(class(X),'double')
-            DB = double(DB);
-        end
-     end
+        %if strcmp(class(X),'double')
+          %  DB = double(DB);
+        %end
+    end
 end
 
 for (i=1:m)
-  model.centers{i} = D{i};
+    model.centers{i} = D{i};
 end
+
 model.R = R;
 
 B = B';

@@ -2,6 +2,7 @@ function recall = test_all_methods(Xtraining, Xtest, WtrueTestTraining, para, me
 
 % ''method'' is the method used to generate small code
 % ''method'' can be
+% KBE-opt-%d KBE-rand-%d KBE-rand-orth-%d (Xu et al. ICCV 2015)
 % CBE-opt CBE-rand (Yu et al. ICML 2014)
 % BITQ-opt BITQ-rand (Gong et al. CVPR 2013)
 % LSH  (Locality Sensitive Hashing)

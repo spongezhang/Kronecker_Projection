@@ -28,7 +28,7 @@ if (strcmp(model_type, ckmeans_name) || ...
     strcmp(model_type, kpq_name)|| ...
     strcmp(model_type, kckmeans_name))
   ckmeans_init = 'natural';
-  fprintf('ckmeans init: "%s"\n', ckmeans_init);
+  %fprintf('ckmeans init: "%s"\n', ckmeans_init);
 end
 
 
